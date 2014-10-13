@@ -6,7 +6,6 @@ While it attempts to crawl through any website and find new links, it won't craw
 
 ## Download
 * [**GitHub Releases**](https://github.com/MarvinMenzerath/WebCrawler/releases)
-* [**Jenkins**](http://ci.menzerath.eu/job/WebCrawler/)
 
 ## Run
 ```
