@@ -63,7 +63,7 @@ public class WebCrawler {
         try {
             doc = Jsoup.connect(url).userAgent(Main.APPLICATION_NAME + "/" + Main.APPLICATION_VERSION + " (" + Main.APPLICATION_URL + ")").get();
         } catch (IOException e) {
-            System.out.println("Unable to read Page at [" + url + "]: " + e.getMessage());
+            System.out.println("\nUnable to read Page at [" + url + "]: " + e.getMessage());
             return;
         }
 
