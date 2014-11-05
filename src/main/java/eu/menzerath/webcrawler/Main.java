@@ -24,10 +24,18 @@ public class Main {
         init();
         sayHello();
 
-        System.out.print("ENTER URL TO CRAWL: ");
-        Scanner sc = new Scanner(System.in);
-        new WebCrawler(sc.nextLine()).start();
-        sc.close();
+        String url;
+
+        if (args.length == 0) {
+            System.out.print("ENTER URL TO CRAWL: ");
+            Scanner sc = new Scanner(System.in);
+            url = sc.nextLine().trim();
+            sc.close();
+        } else {
+            url = args[0].trim();
+        }
+
+        new WebCrawler(url).start();
     }
 
     /**
