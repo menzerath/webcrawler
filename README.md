@@ -11,9 +11,12 @@ While it attempts to crawl through any website and find new links, it won't craw
 ```
 java -jar WebCrawler.jar
 ```
+Now enter the URL you want to crawl (including `http://` or `https://`), press [Enter] and wait until you see the results.
 
-Now enter the URL you want to crawl (including `http://` or `https://`), press [Enter] and wait until you see the results.  
-This may take a while - depending on your server and internet-speed.
+You may also pass the url directly:
+```
+java -jar WebCrawler.jar http://my-website.com
+```
 
 ### Example Output
 
