@@ -34,30 +34,36 @@ public class XMLOutput {
         // new XML-file
         Document doc = docBuilder.newDocument();
 
-        // urlset (contains every url)
-        Element urls = doc.createElement("urlset");
-        doc.appendChild(urls);
+        if (!internalLinks.isEmpty() || !externalLinks.isEmpty()) {
+            // urlset (contains every url)
+            Element urls = doc.createElement("urlset");
+            doc.appendChild(urls);
 
-        // internal urls
-        Element internalUrls = doc.createElement("internal");
-        urls.appendChild(internalUrls);
+            // internal urls
+            if (!internalLinks.isEmpty()) {
+                Element internalUrls = doc.createElement("internal");
+                urls.appendChild(internalUrls);
 
-        // add every internal url
-        for (String urlString : internalLinks) {
-            Element url = doc.createElement("url");
-            url.appendChild(doc.createTextNode(urlString));
-            internalUrls.appendChild(url);
-        }
+                // add every internal url
+                for (String urlString : internalLinks) {
+                    Element url = doc.createElement("url");
+                    url.appendChild(doc.createTextNode(urlString));
+                    internalUrls.appendChild(url);
+                }
+            }
 
-        // external urls
-        Element externalUrls = doc.createElement("external");
-        urls.appendChild(externalUrls);
+            // external urls
+            if (!externalLinks.isEmpty()) {
+                Element externalUrls = doc.createElement("external");
+                urls.appendChild(externalUrls);
 
-        // add every external url
-        for (String urlString : externalLinks) {
-            Element url = doc.createElement("url");
-            url.appendChild(doc.createTextNode(urlString));
-            externalUrls.appendChild(url);
+                // add every external url
+                for (String urlString : externalLinks) {
+                    Element url = doc.createElement("url");
+                    url.appendChild(doc.createTextNode(urlString));
+                    externalUrls.appendChild(url);
+                }
+            }
         }
 
         // write content into xml file

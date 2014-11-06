@@ -73,23 +73,19 @@ public class WebCrawler {
             String linkUrl = link.attr("abs:href");
             if (linkUrl.startsWith(ROOT_URL)) { // Found an internal link
                 if (!linkUrl.matches(Main.noPageRegEx)) { // This link does not end with a "#"
-
-                    // Is there a file?
-                    boolean isFile = false;
+                    // Is link a file?
                     for (String regex : Main.fileRegEx) {
                         if (linkUrl.matches(regex)) {
-                            isFile = true;
-                            internalLinks.add(linkUrl); // It is a file --> add to list
+                            internalLinks.add(linkUrl); // It is a file --> add to list, but do not try to crawl
+                            return;
                         }
                     }
 
                     // No file --> crawl this page
-                    if (!isFile) crawlPage(linkUrl);
+                    crawlPage(linkUrl);
                 }
             } else { // Found an external link
-                // http://website.com & http://website.com/ are the same page!
-                if (externalLinks.contains(linkUrl) || externalLinks.contains(linkUrl + "/") || externalLinks.contains(linkUrl.substring(0, linkUrl.length() - 1))) return;
-                externalLinks.add(linkUrl);
+                if (!externalLinks.contains(linkUrl) && !linkUrl.equals("")) externalLinks.add(linkUrl);
             }
         }
     }

@@ -18,7 +18,7 @@ public class Main {
 
     /**
      * Start: Init and ask for the URL to crawl
-     * @param args Will be ignored...
+     * @param args [0] --> URL to crawl
      */
     public static void main(String[] args) {
         init();
