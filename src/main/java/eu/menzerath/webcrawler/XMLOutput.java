@@ -18,9 +18,10 @@ public class XMLOutput {
      * Build a XML-file containing every crawled link
      * @param internalLinks every internal link
      * @param externalLinks every external link
+     * @param images every internal and external image
      * @param outputFile file to write to
      */
-    public static void createXmlOutput(List<String> internalLinks, List<String> externalLinks, File outputFile) {
+    public static void createXmlOutput(List<String> internalLinks, List<String> externalLinks, List<String> images, File outputFile) {
         // Create DocumentBuilder
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder;
@@ -34,7 +35,7 @@ public class XMLOutput {
         // new XML-file
         Document doc = docBuilder.newDocument();
 
-        if (!internalLinks.isEmpty() || !externalLinks.isEmpty()) {
+        if (!internalLinks.isEmpty() || !externalLinks.isEmpty() || !images.isEmpty()) {
             // urlset (contains every url)
             Element urls = doc.createElement("urlset");
             doc.appendChild(urls);
@@ -62,6 +63,19 @@ public class XMLOutput {
                     Element url = doc.createElement("url");
                     url.appendChild(doc.createTextNode(urlString));
                     externalUrls.appendChild(url);
+                }
+            }
+
+            // internal / external images
+            if (!images.isEmpty()) {
+                Element imageUrls = doc.createElement("images");
+                urls.appendChild(imageUrls);
+
+                // add every external url
+                for (String urlString : images) {
+                    Element url = doc.createElement("url");
+                    url.appendChild(doc.createTextNode(urlString));
+                    imageUrls.appendChild(url);
                 }
             }
         }

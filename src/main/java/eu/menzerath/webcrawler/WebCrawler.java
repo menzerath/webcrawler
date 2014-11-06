@@ -14,6 +14,7 @@ public class WebCrawler {
     private final String ROOT_URL;
     private List<String> internalLinks = new ArrayList<>();
     private List<String> externalLinks = new ArrayList<>();
+    private List<String> intExtImages = new ArrayList<>();
 
     public WebCrawler(String url) {
         ROOT_URL = url;
@@ -45,8 +46,15 @@ public class WebCrawler {
             i++;
         }
 
+        System.out.println("\nINTERNAL / EXTERNAL IMAGES:");
+        i = 1;
+        for (String url : intExtImages) {
+            System.out.println("[" + i + "] " + url);
+            i++;
+        }
+
         // Create XML-file
-        XMLOutput.createXmlOutput(internalLinks, externalLinks, new File("output.xml"));
+        XMLOutput.createXmlOutput(internalLinks, externalLinks, intExtImages, new File("output.xml"));
     }
 
     /**
@@ -65,6 +73,13 @@ public class WebCrawler {
         } catch (IOException e) {
             System.out.println("\nUnable to read Page at [" + url + "]: " + e.getMessage());
             return;
+        }
+
+        // Get every image from that page
+        Elements images = doc.select("img");
+        for (Element image : images) {
+            String imageUrl = image.attr("abs:src");
+            if (!intExtImages.contains(imageUrl) && !imageUrl.equals("")) intExtImages.add(imageUrl); // It is an image --> add to list
         }
 
         // Get every link from that page
