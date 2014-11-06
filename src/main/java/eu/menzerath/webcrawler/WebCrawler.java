@@ -15,6 +15,7 @@ public class WebCrawler {
     private List<String> internalLinks = new ArrayList<>();
     private List<String> externalLinks = new ArrayList<>();
     private List<String> intExtImages = new ArrayList<>();
+    private int pageCrawled = 1;
 
     public WebCrawler(String url) {
         ROOT_URL = url;
@@ -24,12 +25,9 @@ public class WebCrawler {
      * Start crawling and output results on the console and in a xml-file
      */
     public void start() {
-        System.out.print("CRAWLING");
+        System.out.print("CRAWLING #" + pageCrawled);
 
-        Thread pt = new PointerThread();
-        pt.start();
         crawlPage(ROOT_URL); // <-- Start!
-        pt.interrupt();
 
         // Print results
         System.out.println("\n\nINTERNAL LINKS:");
@@ -62,9 +60,13 @@ public class WebCrawler {
      * @param url Url to crawl
      */
     private void crawlPage(String url) {
-        // http://website.com & http://website.com/ are the same page!
-        if (internalLinks.contains(url) || internalLinks.contains(url + "/") || internalLinks.contains(url.substring(0, url.length() - 1))) return;
         internalLinks.add(url);
+
+        for (int i = 0; i < String.valueOf(pageCrawled - 1).length() + 10; i++) {
+            System.out.print("\b");
+        }
+        System.out.print("CRAWLING #" + pageCrawled);
+        pageCrawled++;
 
         // Open page at url
         Document doc;
@@ -97,27 +99,10 @@ public class WebCrawler {
                     }
 
                     // No file --> crawl this page
-                    crawlPage(linkUrl);
+                    if (!internalLinks.contains(linkUrl) && !linkUrl.equals("")) crawlPage(linkUrl);
                 }
             } else { // Found an external link
                 if (!externalLinks.contains(linkUrl) && !linkUrl.equals("")) externalLinks.add(linkUrl);
-            }
-        }
-    }
-
-    /**
-     * Thread, which will add every 3 seconds another "." to indicate process
-     */
-    private class PointerThread extends Thread {
-        @Override
-        public void run() {
-            while (!this.isInterrupted()) {
-                System.out.print(".");
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException ignored) {
-                    this.interrupt();
-                }
             }
         }
     }
