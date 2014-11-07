@@ -7,15 +7,16 @@ import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class WebCrawler {
     private final String ROOT_URL;
-    private List<String> internalLinks = new ArrayList<>();
-    private List<String> externalLinks = new ArrayList<>();
-    private List<String> intExtImages = new ArrayList<>();
+    private Map<String, Integer> internalLinks = new TreeMap<>();
+    private Map<String, Integer> externalLinks = new TreeMap<>();
+    private Map<String, Integer> intExtImages = new TreeMap<>();
     private int pageCrawled = 1;
+    private int pageChecked = 1;
 
     public WebCrawler(String url) {
         ROOT_URL = url;
@@ -25,29 +26,35 @@ public class WebCrawler {
      * Start crawling and output results on the console and in a xml-file
      */
     public void start() {
+        // First: crawl through all pages and grab every link you can get
         System.out.print("CRAWLING #" + pageCrawled);
+        crawlPage(ROOT_URL);
 
-        crawlPage(ROOT_URL); // <-- Start!
+        // Then: check the returning status-code of all those pages
+        System.out.print("\nCHECKING #" + pageChecked);
+        checkPages(internalLinks);
+        checkPages(externalLinks);
+        checkPages(intExtImages);
 
         // Print results
         System.out.println("\n\nINTERNAL LINKS:");
         int i = 1;
-        for (String url : internalLinks) {
-            System.out.println("[" + i + "] " + url);
+        for (Map.Entry<String, Integer> entry : internalLinks.entrySet()) {
+            System.out.println("[" + i + "] [" + entry.getValue() + "] " + entry.getKey());
             i++;
         }
 
         System.out.println("\nEXTERNAL LINKS:");
         i = 1;
-        for (String url : externalLinks) {
-            System.out.println("[" + i + "] " + url);
+        for (Map.Entry<String, Integer> entry : externalLinks.entrySet()) {
+            System.out.println("[" + i + "] [" + entry.getValue() + "] " + entry.getKey());
             i++;
         }
 
         System.out.println("\nINTERNAL / EXTERNAL IMAGES:");
         i = 1;
-        for (String url : intExtImages) {
-            System.out.println("[" + i + "] " + url);
+        for (Map.Entry<String, Integer> entry : intExtImages.entrySet()) {
+            System.out.println("[" + i + "] [" + entry.getValue() + "] " + entry.getKey());
             i++;
         }
 
@@ -60,7 +67,7 @@ public class WebCrawler {
      * @param url Url to crawl
      */
     private void crawlPage(String url) {
-        internalLinks.add(url);
+        internalLinks.put(url, 999);
 
         for (int i = 0; i < String.valueOf(pageCrawled - 1).length() + 10; i++) {
             System.out.print("\b");
@@ -71,9 +78,10 @@ public class WebCrawler {
         // Open page at url
         Document doc;
         try {
-            doc = Jsoup.connect(url).userAgent(Main.APPLICATION_NAME + "/" + Main.APPLICATION_VERSION + " (" + Main.APPLICATION_URL + ")").get();
+            doc = Jsoup.connect(url).userAgent(Main.APPLICATION_UA).timeout(5000).get();
         } catch (IOException e) {
             System.out.println("\nUnable to read Page at [" + url + "]: " + e.getMessage());
+            internalLinks.put(url, 500);
             return;
         }
 
@@ -81,7 +89,8 @@ public class WebCrawler {
         Elements images = doc.select("img");
         for (Element image : images) {
             String imageUrl = image.attr("abs:src");
-            if (!intExtImages.contains(imageUrl) && !imageUrl.equals("")) intExtImages.add(imageUrl); // It is an image --> add to list
+            // It is an image --> add to list
+            if (!intExtImages.keySet().contains(imageUrl) && !imageUrl.equals("")) intExtImages.put(imageUrl, 999);
         }
 
         // Get every link from that page
@@ -93,17 +102,32 @@ public class WebCrawler {
                     // Is link a file?
                     for (String regex : Main.fileRegEx) {
                         if (linkUrl.matches(regex)) {
-                            internalLinks.add(linkUrl); // It is a file --> add to list, but do not try to crawl
+                            // It is a file --> add to list, but do not try to crawl
+                            internalLinks.put(linkUrl, 999);
                             return;
                         }
                     }
 
                     // No file --> crawl this page
-                    if (!internalLinks.contains(linkUrl) && !linkUrl.equals("")) crawlPage(linkUrl);
+                    if (!internalLinks.keySet().contains(linkUrl) && !linkUrl.equals("")) crawlPage(linkUrl);
                 }
             } else { // Found an external link
-                if (!externalLinks.contains(linkUrl) && !linkUrl.equals("")) externalLinks.add(linkUrl);
+                if (!externalLinks.keySet().contains(linkUrl) && !linkUrl.equals("")) externalLinks.put(linkUrl, 999);
             }
+        }
+    }
+
+    private void checkPages(Map<String, Integer> pagesToCheck) {
+        for (Map.Entry<String, Integer> entry : pagesToCheck.entrySet()) {
+            if (entry.getValue() == 500) continue;
+
+            for (int i = 0; i < String.valueOf(pageChecked - 1).length() + 10; i++) {
+                System.out.print("\b");
+            }
+            System.out.print("CHECKING #" + pageChecked);
+            pageChecked++;
+
+            pagesToCheck.put(entry.getKey(), new ConnectionTester(entry.getKey()).getStatuscode());
         }
     }
 }

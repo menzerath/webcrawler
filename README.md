@@ -1,5 +1,5 @@
 # WebCrawler
-This is a simple, recursive Java Web-Crawler for internal and external links and images on a specific website, which creates a simple XML-file including the found pages.
+This is a simple, recursive Java Web-Crawler for internal and external links and images on a specific website, which creates a simple XML-file including the found pages and the returned status-code.
 While it attempts to crawl through any website and find new links, it won't crawl a site multiple times or try to crawl a downloadable file.
 
 **Important:** Crawling may take some time and use many server-resources. Be careful!
@@ -9,12 +9,6 @@ While it attempts to crawl through any website and find new links, it won't craw
 
 ## Run
 ```
-java -jar WebCrawler.jar
-```
-Now enter the URL you want to crawl (including `http://` or `https://`), press [Enter] and wait until you see the results.
-
-You may also pass the url directly:
-```
 java -jar WebCrawler.jar http://my-website.com
 ```
 
@@ -23,40 +17,25 @@ java -jar WebCrawler.jar http://my-website.com
 #### Console
 ```
 INTERNAL LINKS:
-[1] https://menzerath.eu
-[2] https://menzerath.eu/rss/
-[3] https://menzerath.eu/tag/android/
-[4] https://menzerath.eu/tag/java/
-[5] https://menzerath.eu/tag/linux/
-[6] https://menzerath.eu/tag/news/
-[7] https://menzerath.eu/tag/raspberry-pi/
-[8] https://menzerath.eu/tag/review/
-[9] https://menzerath.eu/tag/software/
-[10] ...
+[1] [200] https://menzerath.eu
+[2] [200] https://menzerath.eu/rss/
+[3] [200] https://menzerath.eu/tag/android/
+[4] [200] https://menzerath.eu/tag/java/
+[5] [XXX] ...
 
 EXTERNAL LINKS:
-[1] https://facebook.com/menzerath.eu
-[2] https://twitter.com/MarvinMenzerath
-[3] https://github.com/MarvinMenzerath
-[4] http://blackphantom.de
-[5] http://ratgeber---forum.de
-[6] http://thiefas.de
-[7] http://patrick246.de
-[8] https://ghost.org
-[9] http://www.e-recht24.de/
-[10] ...
+[1] [200] https://facebook.com/menzerath.eu
+[2] [200] https://twitter.com/MarvinMenzerath
+[3] [200] https://github.com/MarvinMenzerath
+[4] [200] http://blackphantom.de
+[5] [XXX] ...
 
 INTERNAL / EXTERNAL IMAGES:
-[1] https://raw.githubusercontent.com/MarvinMenzerath/IsMyWebsiteDown/master/doc/Screenshot1.png
-[2] https://raw.githubusercontent.com/MarvinMenzerath/IsMyWebsiteDown/master/doc/Screenshot2.png
-[3] https://raw.githubusercontent.com/MarvinMenzerath/IsMyWebsiteDown/master/doc/Screenshot3.png
-[4] https://menzerath.eu/content/images/2014/10/Screen.png
-[5] https://menzerath.eu/content/images/2014/10/WordpressBlog-Installation.png
-[6] https://menzerath.eu/content/images/2014/10/WordpressBlog-Dashboard.png
-[7] https://menzerath.eu/content/images/2014/10/WordpressBlog-Theme.png
-[8] https://menzerath.eu/content/images/2014/10/GitHub-Pages.png
-[9] https://menzerath.eu/content/images/2014/10/OwnCloud-Dateiablage.png
-[10] ...
+[1] [200] https://raw.githubusercontent.com/MarvinMenzerath/IsMyWebsiteDown/master/doc/Screenshot1.png
+[2] [200] https://raw.githubusercontent.com/MarvinMenzerath/IsMyWebsiteDown/master/doc/Screenshot2.png
+[3] [200] https://raw.githubusercontent.com/MarvinMenzerath/IsMyWebsiteDown/master/doc/Screenshot3.png
+[4] [200] https://menzerath.eu/content/images/2014/10/Screen.png
+[5] [XXX] ...
 
 ```
 
@@ -65,40 +44,70 @@ INTERNAL / EXTERNAL IMAGES:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <urlset>
     <internal>
-        <url>https://menzerath.eu</url>
-        <url>https://menzerath.eu/rss/</url>
-        <url>https://menzerath.eu/tag/android/</url>
-        <url>https://menzerath.eu/tag/java/</url>
-        <url>https://menzerath.eu/tag/linux/</url>
-        <url>https://menzerath.eu/tag/news/</url>
-        <url>https://menzerath.eu/tag/raspberry-pi/</url>
-        <url>https://menzerath.eu/tag/review/</url>
-        <url>https://menzerath.eu/tag/software/</url>
-        <url>...</url>
+        <link>
+            <url>https://menzerath.eu</url>
+            <code>200</code>
+        </link>
+        <link>
+            <url>https://menzerath.eu/rss/</url>
+            <code>200</code>
+        </link>
+        <link>
+            <url>https://menzerath.eu/tag/android/</url>
+            <code>200</code>
+        </link>
+        <link>
+            <url>https://menzerath.eu/tag/java/</url>
+            <code>200</code>
+        </link>
+        <link>
+            <url>...</url>
+            <code>XXX</code>
+        </link>
     </internal>
     <external>
-        <url>https://facebook.com/menzerath.eu</url>
-        <url>https://twitter.com/MarvinMenzerath</url>
-        <url>https://github.com/MarvinMenzerath</url>
-        <url>http://blackphantom.de</url>
-        <url>http://ratgeber---forum.de</url>
-        <url>http://thiefas.de</url>
-        <url>http://patrick246.de</url>
-        <url>https://ghost.org</url>
-        <url>http://www.e-recht24.de/</url>
-        <url>...</url>
+        <link>
+            <url>https://facebook.com/menzerath.eu</url>
+            <code>200</code>
+        </link>
+        <link>
+            <url>https://twitter.com/MarvinMenzerath</url>
+            <code>200</code>
+        </link>
+        <link>
+            <url>https://github.com/MarvinMenzerath</url>
+            <code>200</code>
+        </link>
+        <link>
+            <url>http://blackphantom.de</url>
+            <code>200</code>
+        </link>
+        <link>
+            <url>...</url>
+            <code>XXX</code>
+        </link>
     </external>
     <images>
-        <url>https://raw.githubusercontent.com/MarvinMenzerath/IsMyWebsiteDown/master/doc/Screenshot1.png</url>
-        <url>https://raw.githubusercontent.com/MarvinMenzerath/IsMyWebsiteDown/master/doc/Screenshot2.png</url>
-        <url>https://raw.githubusercontent.com/MarvinMenzerath/IsMyWebsiteDown/master/doc/Screenshot3.png</url>
-        <url>https://menzerath.eu/content/images/2014/10/Screen.png</url>
-        <url>https://menzerath.eu/content/images/2014/10/WordpressBlog-Installation.png</url>
-        <url>https://menzerath.eu/content/images/2014/10/WordpressBlog-Dashboard.png</url>
-        <url>https://menzerath.eu/content/images/2014/10/WordpressBlog-Theme.png</url>
-        <url>https://menzerath.eu/content/images/2014/10/GitHub-Pages.png</url>
-        <url>https://menzerath.eu/content/images/2014/10/OwnCloud-Dateiablage.png</url>
-        <url>...</url>
+        <link>
+            <url>https://raw.githubusercontent.com/MarvinMenzerath/IsMyWebsiteDown/master/doc/Screenshot1.png</url>
+            <code>200</code>
+        </link>
+        <link>
+            <url>https://raw.githubusercontent.com/MarvinMenzerath/IsMyWebsiteDown/master/doc/Screenshot2.png</url>
+            <code>200</code>
+        </link>
+        <link>
+            <url>https://raw.githubusercontent.com/MarvinMenzerath/IsMyWebsiteDown/master/doc/Screenshot3.png</url>
+            <code>200</code>
+        </link>
+        <link>
+            <url>https://menzerath.eu/content/images/2014/10/Screen.png</url>
+            <code>200</code>
+        </link>
+        <link>
+            <url>...</url>
+            <code>XXX</code>
+        </link>
     </images>
 </urlset>
 ```

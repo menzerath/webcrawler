@@ -6,12 +6,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Main {
     public static final String APPLICATION_NAME = "WebCrawler";
-    public static final String APPLICATION_VERSION = "1.0";
+    public static final String APPLICATION_VERSION = "1.1";
     public static final String APPLICATION_URL = "https://github.com/MarvinMenzerath/WebCrawler";
+    public static final String APPLICATION_UA = Main.APPLICATION_NAME + "/" + Main.APPLICATION_VERSION + " (" + Main.APPLICATION_URL + ")";
 
     public static final List<String> fileRegEx = new ArrayList<>();
     public static final String noPageRegEx = ".*?\\#.*";
@@ -24,18 +24,12 @@ public class Main {
         init();
         sayHello();
 
-        String url;
-
-        if (args.length == 0) {
-            System.out.print("ENTER URL TO CRAWL: ");
-            Scanner sc = new Scanner(System.in);
-            url = sc.nextLine().trim();
-            sc.close();
-        } else {
-            url = args[0].trim();
+        if (args.length != 1) {
+            System.out.println("Please pass the URL to crawl as an argument to this application: \"java -jar WebCrawler.jar http://my-website.com\"");
+            System.exit(1);
         }
 
-        new WebCrawler(url).start();
+        new WebCrawler(args[0].trim()).start();
     }
 
     /**
