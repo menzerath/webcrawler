@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
 
     <name>WebCrawler</name>
-    <description>Simple Java Web-Crawler for internal and external links on websites with XML-Output</description>
+    <description>Simple Java Web-Crawler for internal and external links and images on websites with XML-Output.</description>
     <url>https://github.com/MarvinMenzerath/WebCrawler</url>
 
     <properties>
