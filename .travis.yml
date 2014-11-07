@@ -9,4 +9,5 @@ deploy:
     secure: YLY1VGSGOtYjluAwOO5J6ttm6h+nZSjNw76JEKbtzdEOHRkuWRgTb+tiHtX8YHYMDws3gkPs9dW6jk7RI2dpVko22X7LeHc1NKUtOxMGp4fhsnMMMTiRBfztA+B9BXpC8MX4FIE7cHxr5Q6l6MCVT83ruf3TYAPCvmIdB/39T+E=
   file: WebCrawler.jar
   on:
-    repo: MarvinMenzerath/WebCrawler
+    tags: true
+    all_branches: true
