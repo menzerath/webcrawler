@@ -5,6 +5,7 @@ While it attempts to crawl through any website and find new links, it won't craw
 **Important:** Crawling may take some time and use many server-resources. Be careful!
 
 ## Download
+[![Build Status](https://travis-ci.org/MarvinMenzerath/WebCrawler.svg?branch=master)](https://travis-ci.org/MarvinMenzerath/WebCrawler)
 * [**GitHub Releases**](https://github.com/MarvinMenzerath/WebCrawler/releases)
 
 ## Run
