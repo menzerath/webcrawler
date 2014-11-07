@@ -1,4 +1,12 @@
 language: java
 jdk:
-  - oraclejdk8
-  - oraclejdk7
+- oraclejdk8
+- oraclejdk7
+install: mvn install -DfinalName=WebCrawler -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+deploy:
+  provider: releases
+  api_key:
+    secure: YLY1VGSGOtYjluAwOO5J6ttm6h+nZSjNw76JEKbtzdEOHRkuWRgTb+tiHtX8YHYMDws3gkPs9dW6jk7RI2dpVko22X7LeHc1NKUtOxMGp4fhsnMMMTiRBfztA+B9BXpC8MX4FIE7cHxr5Q6l6MCVT83ruf3TYAPCvmIdB/39T+E=
+  file: WebCrawler.jar
+  on:
+    repo: MarvinMenzerath/WebCrawler

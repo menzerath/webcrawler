@@ -14,6 +14,7 @@
     <url>https://github.com/MarvinMenzerath/WebCrawler</url>
 
     <properties>
+        <finalName>${project.artifactId}-${project.version}</finalName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -26,6 +27,7 @@
     </dependencies>
 
     <build>
+        <finalName>${finalName}</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
