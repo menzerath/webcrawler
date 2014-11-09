@@ -18,7 +18,7 @@ public class Main {
     public static final String noPageRegEx = ".*?\\#.*";
 
     /**
-     * Start: Init and ask for the URL to crawl
+     * Start: Open GUI or start on the console
      * @param args [0] --> URL to crawl
      */
     public static void main(String[] args) {
