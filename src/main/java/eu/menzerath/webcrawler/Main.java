@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Main {
     public static final String APPLICATION_NAME = "WebCrawler";
-    public static final String APPLICATION_VERSION = "1.2.3";
+    public static final String APPLICATION_VERSION = "1.3";
     public static final String APPLICATION_URL = "https://github.com/MarvinMenzerath/WebCrawler";
     public static final String APPLICATION_UA = Main.APPLICATION_NAME + "/" + Main.APPLICATION_VERSION + " (" + Main.APPLICATION_URL + ")";
 
