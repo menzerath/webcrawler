@@ -12,13 +12,15 @@ import java.util.TreeMap;
 
 public class WebCrawler {
     private final String ROOT_URL;
+    private final GuiApplication GUI;
     private Map<String, Integer> internalLinks = new TreeMap<>();
     private Map<String, Integer> externalLinks = new TreeMap<>();
     private Map<String, Integer> imageLinks = new TreeMap<>();
-    private int pageCrawled = 1;
+    private int pagesCrawled = 1;
 
-    public WebCrawler(String url) {
+    public WebCrawler(String url, GuiApplication gui) {
         ROOT_URL = url;
+        GUI = gui;
     }
 
     /**
@@ -26,8 +28,9 @@ public class WebCrawler {
      */
     public void start() {
         // crawl through all pages and grab every link you can get
-        System.out.print("CRAWLING #" + pageCrawled);
+        System.out.print("CRAWLING #" + pagesCrawled);
         crawlPage(ROOT_URL);
+        if (GUI != null) GUI.notifyCrawlingFinished();
 
         // Print results
         System.out.println("\n\nINTERNAL LINKS:");
@@ -57,16 +60,17 @@ public class WebCrawler {
 
     /**
      * Recursive page-crawler
-     * @param url Url to crawl
+     * @param url url to crawl
      */
     private void crawlPage(String url) {
-        addPage(internalLinks, url);
+        addPage(0, url);
+        if (GUI != null) GUI.notifyCrawlingNewPage(url);
 
-        for (int i = 0; i < String.valueOf(pageCrawled - 1).length() + 10; i++) {
+        for (int i = 0; i < String.valueOf(pagesCrawled - 1).length() + 10; i++) {
             System.out.print("\b");
         }
-        System.out.print("CRAWLING #" + pageCrawled);
-        pageCrawled++;
+        System.out.print("CRAWLING #" + pagesCrawled);
+        pagesCrawled++;
 
         // Open page at url
         Document doc;
@@ -74,7 +78,7 @@ public class WebCrawler {
             doc = Jsoup.connect(url).userAgent(Main.APPLICATION_UA).timeout(5000).get();
         } catch (IOException e) {
             System.out.println("\nUnable to read Page at [" + url + "]: " + e.getMessage());
-            addPage(internalLinks, url);
+            addPage(0, url, 500);
             return;
         }
 
@@ -83,7 +87,7 @@ public class WebCrawler {
         for (Element image : images) {
             String imageUrl = image.attr("abs:src");
             // It is an image --> add to list
-            if (!listContains(imageLinks, imageUrl) && !imageUrl.equals("")) addPage(imageLinks, imageUrl);
+            if (!listContains(imageLinks, imageUrl) && !imageUrl.equals("")) addPage(2, imageUrl);
         }
 
         // Get every link from that page
@@ -96,7 +100,7 @@ public class WebCrawler {
                     for (String regex : Main.fileRegEx) {
                         if (linkUrl.matches(regex)) {
                             // It is a file --> add to list, but do not try to crawl
-                            addPage(internalLinks, linkUrl);
+                            addPage(0, linkUrl);
                             return;
                         }
                     }
@@ -105,27 +109,86 @@ public class WebCrawler {
                     if (!listContains(internalLinks, linkUrl) && !linkUrl.equals("")) crawlPage(linkUrl);
                 }
             } else { // Found an external link
-                if (!listContains(externalLinks, linkUrl) && !linkUrl.equals("")) addPage(externalLinks, linkUrl);
+                if (!listContains(externalLinks, linkUrl) && !linkUrl.equals("")) addPage(1, linkUrl);
             }
         }
     }
 
     /**
      * Add a new page/link/url to the corresponding list
-     * @param list list/map which will contain the url
-     * @param url url to add
+     * @param listId list/map which will contain the url
+     * @param url    url to add
      */
-    private void addPage(Map<String, Integer> list, String url) {
-        list.put(url, new ConnectionTester(url).getStatuscode());
+    private void addPage(int listId, String url) {
+        int statuscode = new ConnectionTester(url).getStatuscode();
+        if (listId == 0) {
+            internalLinks.put(url, statuscode);
+        } else if (listId == 1) {
+            externalLinks.put(url, statuscode);
+        } else if (listId == 2) {
+            imageLinks.put(url, statuscode);
+        }
+
+        if (GUI != null) GUI.notifyPageFound(listId, url, statuscode);
+    }
+
+    /**
+     * Add a new page/link/url to the corresponding list
+     * @param listId     list/map which will contain the url
+     * @param url        url to add
+     * @param statuscode http-statuscode of this url
+     */
+    private void addPage(int listId, String url, int statuscode) {
+        if (listId == 0) {
+            internalLinks.put(url, statuscode);
+        } else if (listId == 1) {
+            externalLinks.put(url, statuscode);
+        } else if (listId == 2) {
+            imageLinks.put(url, statuscode);
+        }
+
+        if (GUI != null) GUI.notifyPageFound(listId, url, statuscode);
     }
 
     /**
      * Check whether a specific list contains this url already or not
      * @param list list/map which may contain the link
-     * @param url url to add
+     * @param url  url to add
      * @return list contains url or not
      */
     private boolean listContains(Map<String, Integer> list, String url) {
         return list.keySet().contains(url);
+    }
+
+    /**
+     * Get the Internal-Links-Map / -List
+     * @return Internal-Links-Map
+     */
+    public Map<String, Integer> getInternalLinksList() {
+        return internalLinks;
+    }
+
+    /**
+     * Get the External-Links-Map / -List
+     * @return External-Links-Map
+     */
+    public Map<String, Integer> getExternalLinksList() {
+        return externalLinks;
+    }
+
+    /**
+     * Get the Image-Links-Map / -List
+     * @return Image-Links-Map
+     */
+    public Map<String, Integer> getImagesLinksList() {
+        return imageLinks;
+    }
+
+    /**
+     * Get the amount of all crawled pages
+     * @return amount of crawled pages
+     */
+    public int getTotalPagesCrawled() {
+        return pagesCrawled;
     }
 }

@@ -1,6 +1,7 @@
 package eu.menzerath.webcrawler;
 
 import javax.net.ssl.*;
+import java.awt.*;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -24,12 +25,17 @@ public class Main {
         init();
         sayHello();
 
-        if (args.length != 1) {
-            System.out.println("Please pass the URL to crawl as an argument to this application: \"java -jar WebCrawler.jar http://my-website.com\"");
-            System.exit(1);
+        if (args.length == 0) {
+            if (GraphicsEnvironment.isHeadless()) {
+                // Running on a setup without graphical desktop and no arguments passed: show the needed arguments
+                System.out.println("Please pass the URL to crawl as an argument to this application: \"java -jar WebCrawler.jar http://my-website.com\"");
+                System.exit(1);
+            } else { // Otherwise: Open the GUI
+                GuiApplication.startGUI();
+            }
+        } else if (args.length == 1) {
+            new WebCrawler(args[0].trim(), null).start();
         }
-
-        new WebCrawler(args[0].trim()).start();
     }
 
     /**
