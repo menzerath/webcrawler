@@ -9,13 +9,24 @@ While it attempts to crawl through any website and find new links, it won't craw
 * [**GitHub Releases**](https://github.com/MarvinMenzerath/WebCrawler/releases)
 
 ## Run
+
+### GUI
+Double-click the downloaded file or use the console:
+```
+java -jar WebCrawler.jar
+```
+
+### Console
 ```
 java -jar WebCrawler.jar http://my-website.com
 ```
 
-### Example Output
+## Example Output
 
-#### Console
+### GUI
+![GUI](https://raw.githubusercontent.com/MarvinMenzerath/WebCrawler/master/doc/Screenshot.png)
+
+### Console
 ```
 INTERNAL LINKS:
 [1] [200] https://menzerath.eu
@@ -40,7 +51,7 @@ INTERNAL / EXTERNAL IMAGES:
 
 ```
 
-#### XML-File
+### XML-File
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <urlset>
