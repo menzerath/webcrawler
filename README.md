@@ -1,7 +1,5 @@
 # WebCrawler
-This is a simple, recursive Java Web-Crawler for internal and external links and images on a specific website, which creates a simple XML-file including the found pages and the returned status-code.  
-[![Build Status](https://drone.io/github.com/MarvinMenzerath/WebCrawler/status.png)](https://drone.io/github.com/MarvinMenzerath/WebCrawler/latest)
-
+This is a simple, recursive Java Web-Crawler for internal and external links and images on a specific website, which creates a simple XML-file including the found pages and the returned status-code.
 While it attempts to crawl through any website and find new links, it won't crawl a site multiple times or try to crawl a downloadable file.
 
 **Important:** Crawling may take some time and use many server-resources. Be careful!
